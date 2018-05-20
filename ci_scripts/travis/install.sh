@@ -26,12 +26,10 @@ if [[ ! -f go.tar.gz ]]
    fi
 tar -xf go.tar.gz
 sudo mv go /usr/local
-go version
 
 cd ..
 export PATH=/home/travis/miniconda/bin:$PATH
 export PATH=/usr/local/go/bin:$PATH
-go version
 conda update --yes conda
 popd
 

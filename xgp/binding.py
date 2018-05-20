@@ -4,12 +4,23 @@ import os
 import numpy as np
 
 
-def load_so():
-    here = os.path.dirname(os.path.abspath(__file__))
-    libs = glob.glob(os.path.join(here, '../xgp*.so'))
-    if not libs:
-        raise Exception('Cannot find xgp.so')
-    return ctypes.cdll.LoadLibrary(libs[0])
+def find_xgp_dll_paths():
+    """Finds the XGP dynamic library file."""
+    here = os.path.dirname(os.path.abspath(os.path.expanduser(__file__)))
+
+    def make_paths(ext):
+        return [
+            *glob.glob(os.path.join(here, 'xgp*.{}'.format(ext))),
+            *glob.glob(os.path.join(here, '..', 'xgp*.{}'.format(ext))),
+            *glob.glob(os.path.join(here, '../..', 'xgp*.{}'.format(ext))),
+        ]
+
+    return make_paths('so') + make_paths('dll') + make_paths('pyd')
+
+
+def load_dll(path):
+    """Loads and returns a dynamic library file."""
+    return ctypes.cdll.LoadLibrary(path)
 
 
 class GoString(ctypes.Structure):
@@ -93,7 +104,13 @@ def fit(X_train: np.ndarray,
         seed: int,
         verbose: bool):
     """Refers to the Fit method in main.go"""
-    lib = load_so()
+
+    # Find the and load the XGP dynamic library file
+    paths = find_xgp_dll_paths()
+    print(paths)
+    if len(paths) == 0:
+        raise RuntimeError("Can't find any XGP dynamic library files")
+    lib = load_dll(paths[0])
 
     # Use Fortran memory layout (and not contiguous memory layout)
     X_train = np.asfortranarray(X_train.astype(float))
