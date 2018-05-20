@@ -39,8 +39,8 @@ python -c "import numpy; print('numpy %s' % numpy.__version__)"
 python -c "import scipy; print('scipy %s' % scipy.__version__)"
 
 # Install Go
-sudo curl -O https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz
-sudo tar -xvf go1.9.1.linux-amd64.tar.gz
+sudo curl -O https://storage.googleapis.com/golang/go1.10.1.linux-amd64.tar.gz
+sudo tar -xvf go1.10.1.linux-amd64.tar.gz
 sudo mv go /usr/local
 
 python setup.py develop
