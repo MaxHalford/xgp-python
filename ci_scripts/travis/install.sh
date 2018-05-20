@@ -42,8 +42,6 @@ python -c "import scipy; print('scipy %s' % scipy.__version__)"
 sudo curl -O https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz
 sudo tar -xvf go1.8.linux-amd64.tar.gz
 sudo mv go /usr/local
-go --version
-go --version
-go --version
+go version
 
 python setup.py develop
