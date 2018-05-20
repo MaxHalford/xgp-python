@@ -11,14 +11,25 @@ cd download
 echo "Cached in $HOME/download :"
 ls -l
 echo
+
 if [[ ! -f miniconda.sh ]]
    then
    wget http://repo.continuum.io/miniconda/Miniconda-3.6.0-Linux-x86_64.sh \
        -O miniconda.sh
    fi
 chmod +x miniconda.sh && ./miniconda.sh -b
+
+if [[ ! -f go.tar.gz ]]
+   then
+   wget http://repo.continuum.io/miniconda/Miniconda-3.6.0-Linux-x86_64.sh \
+       -O go.tar.gz
+   fi
+tar -xvf go.tar.gz
+mv go /usr/local
+
 cd ..
 export PATH=/home/travis/miniconda/bin:$PATH
+export PATH=/usr/local/go/bin:$PATH
 conda update --yes conda
 popd
 
@@ -37,11 +48,4 @@ fi
 python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
 python -c "import scipy; print('scipy %s' % scipy.__version__)"
-
-# Install Go
-sudo curl -O https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz
-sudo tar -xvf go1.8.linux-amd64.tar.gz
-sudo mv go /usr/local
-go version
-
 python setup.py develop
