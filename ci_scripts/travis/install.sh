@@ -19,9 +19,10 @@ if [[ ! -f miniconda.sh ]]
    fi
 chmod +x miniconda.sh && ./miniconda.sh -b
 
+rm go.tar.gz
 if [[ ! -f go.tar.gz ]]
    then
-   wget http://repo.continuum.io/miniconda/Miniconda-3.6.0-Linux-x86_64.sh \
+   wget https://storage.googleapis.com/golang/go1.10.1.linux-amd64.tar.gz \
        -O go.tar.gz
    fi
 tar -xvf go.tar.gz
