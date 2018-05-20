@@ -25,7 +25,7 @@ if [[ ! -f go.tar.gz ]]
        -O go.tar.gz
    fi
 tar -xf go.tar.gz
-mv go /usr/local
+sudo mv go /usr/local
 go version
 
 cd ..
