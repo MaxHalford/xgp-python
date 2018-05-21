@@ -17,16 +17,18 @@ environment:
       PYTHON_VERSION: "3.5.0"
       PYTHON_ARCH: "32"
       MINICONDA: "C:\\Miniconda35"
+      GCC_PATH: mingw_64
 
     - PYTHON: "C:\\Python35-x64"
       PYTHON_VERSION: "3.5.0"
       PYTHON_ARCH: "64"
       MINICONDA: "C:\\Miniconda35-x64"
+      GCC_PATH: mingw_64
 
 install:
   # Miniconda is pre-installed in the worker build
   - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
-  - "dir C:\\mingw-w64"
+  - "dir C:\\mingw-w64\\x86_64-7.2.0-posix-seh-rt_v5-rev1"
   - "SET PATH=C:\\mingw-w64\\x86_64-7.2.0-posix-seh-rt_v5-rev1;%PATH%"
   - "python -m pip install -U pip"
 
