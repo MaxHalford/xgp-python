@@ -21,7 +21,7 @@ environment:
 
 install:
   # Set GCC path
-  - "SET PATH=C:\\msys64\\mingw64\\bin;%PATH%"
+  - "SET PATH=C:\\cygwin64\\bin;%PATH%"
 
   # Miniconda is pre-installed in the worker build
   - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
