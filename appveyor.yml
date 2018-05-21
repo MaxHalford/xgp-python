@@ -26,7 +26,8 @@ environment:
 install:
   # Miniconda is pre-installed in the worker build
   - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
-  - "SET PATH=C:\\mingw-w64\\x86_64-7.2.0-posix-seh-rt_v5-rev1\\bin;%PATH%"
+  - "dir C:\\mingw-w64"
+  - "SET PATH=C:\\mingw-w64\\x86_64-7.2.0-posix-seh-rt_v5-rev1;%PATH%"
   - "python -m pip install -U pip"
 
   # Check that we have the expected version and architecture for Python
