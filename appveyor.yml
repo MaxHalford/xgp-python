@@ -14,11 +14,6 @@ environment:
 
   matrix:
 
-    - PYTHON: "C:\\Python35"
-      PYTHON_VERSION: "3.5.0"
-      PYTHON_ARCH: "32"
-      MINICONDA: "C:\\Miniconda35"
-
     - PYTHON: "C:\\Python35-x64"
       PYTHON_VERSION: "3.5.0"
       PYTHON_ARCH: "64"
@@ -26,7 +21,7 @@ environment:
 
 install:
   # Set GCC path
-  - "SET PATH=C:\\MinGW\\bin;%PATH%"
+  - "SET PATH=C:\\msys64\\mingw64\\bin;%PATH%"
 
   # Miniconda is pre-installed in the worker build
   - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
