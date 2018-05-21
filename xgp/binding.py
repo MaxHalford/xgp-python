@@ -107,7 +107,6 @@ def fit(X_train: np.ndarray,
 
     # Find the and load the XGP dynamic library file
     paths = find_xgp_dll_paths()
-    print(paths)
     if len(paths) == 0:
         raise RuntimeError("Can't find any XGP dynamic library files")
     lib = load_dll(paths[0])

@@ -1,5 +1,8 @@
 package main
 
+// #cgo pkg-config: python
+// #define Py_LIMITED_API
+// #include <Python.h>
 import "C"
 import (
 	"math/rand"
