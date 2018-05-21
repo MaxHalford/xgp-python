@@ -26,7 +26,7 @@ setup(name='xgp',
       install_requires=INSTALL_REQUIRES,
       author_email='maxhalford25@gmail.com',
       url='https://maxhalford.github.io/xgp',
-      build_golang={'root': 'github.com/MaxHalford/xgp-sklearn'},
+      build_golang={'root': 'github.com/MaxHalford/xgp-python'},
       ext_modules=[Extension('xgp', ['xgp/xgp.go'])],
       setup_requires=['setuptools-golang>=0.2.0'],
       )
