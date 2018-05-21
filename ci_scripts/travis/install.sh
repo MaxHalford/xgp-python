@@ -19,17 +19,8 @@ if [[ ! -f miniconda.sh ]]
    fi
 chmod +x miniconda.sh && ./miniconda.sh -b
 
-if [[ ! -f go.tar.gz ]]
-   then
-   wget https://storage.googleapis.com/golang/go1.10.1.linux-amd64.tar.gz \
-       -O go.tar.gz
-   fi
-tar -xf go.tar.gz
-sudo mv go /usr/local
-
 cd ..
 export PATH=/home/travis/miniconda/bin:$PATH
-export PATH=/usr/local/go/bin:$PATH
 conda update --yes conda
 popd
 
