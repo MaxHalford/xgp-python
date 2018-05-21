@@ -9,6 +9,8 @@ environment:
     CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\ci_scripts\\appveyor\\run_with_env.cmd"
     MODULE: xgp
     PROJECT_NAME: xgp
+    GOPATH: c:\gopath
+    GOVERSION: 1.10
 
   matrix:
 
@@ -23,6 +25,15 @@ environment:
       MINICONDA: "C:\\Miniconda35-x64"
 
 install:
+  # Install Go
+  - "rmdir C:\\go /s /q"
+  - "appveyor DownloadFile https://storage.googleapis.com/golang/go%GOVERSION%.windows-amd64.msi"
+  - "msiexec /i go%GOVERSION%.windows-amd64.msi /q"
+  - "choco install bzr"
+  - "SET PATH=C:\\go\\bin;%GOPATH%\\bin;C:\Program Files (x86)\\Bazaar\\;C:\\Program File\s\Mercurial\\%PATH%""
+  - "go version"
+  - "go env"
+
   # Set GCC path
   - "SET PATH=C:\\cygwin64\\bin;%PATH%"
 
