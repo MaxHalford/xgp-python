@@ -30,7 +30,7 @@ install:
   - "appveyor DownloadFile https://storage.googleapis.com/golang/go%GOVERSION%.windows-amd64.msi"
   - "msiexec /i go%GOVERSION%.windows-amd64.msi /q"
   - "choco install bzr"
-  - "SET PATH=C:\\go\\bin;%GOPATH%\\bin;C:\Program Files (x86)\\Bazaar\\;C:\\Program File\s\Mercurial\\%PATH%""
+  - "SET PATH=C:\\go\\bin;%GOPATH%\\bin;C:\\Program Files (x86)\\Bazaar\\;C:\\Program File\\s\\Mercurial\\%PATH%""
   - "go version"
   - "go env"
 
