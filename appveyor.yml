@@ -1,7 +1,7 @@
 # AppVeyor.com is a Continuous Integration service to build and run tests under
 # Windows
 
-platform: x64
+platform: x32
 
 environment:
   global:
@@ -14,14 +14,14 @@ environment:
 
   matrix:
 
-    - PYTHON: "C:\\Python35-x64"
+    - PYTHON: "C:\\Python35"
       PYTHON_VERSION: "3.5.0"
-      PYTHON_ARCH: "64"
-      MINICONDA: "C:\\Miniconda35-x64"
+      PYTHON_ARCH: "32"
+      MINICONDA: "C:\\Miniconda35"
 
 install:
   # Set GCC path
-  - "SET PATH=C:\\msys64\\mingw64\\bin;%PATH%"
+  - "SET PATH=C:\\MinGW\\bin;%PATH%"
 
   # Miniconda is pre-installed in the worker build
   - "SET PATH=%MINICONDA%;%MINICONDA%\\Scripts;%PATH%"
