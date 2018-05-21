@@ -76,9 +76,9 @@ def fit(X_train: np.ndarray,
         y_val: np.ndarray,
         w_val: np.ndarray,
 
-
         loss_metric_name: str,
         eval_metric_name: str,
+        parsimony_coefficient: float,
 
         funcs: str,
         const_min: float,
@@ -98,8 +98,6 @@ def fit(X_train: np.ndarray,
         p_point_mutation: float,
         point_mutation_rate: float,
         p_sub_tree_crossover: float,
-
-        parsimony_coefficient: float,
 
         seed: int,
         verbose: bool):
@@ -133,6 +131,7 @@ def fit(X_train: np.ndarray,
 
         (str_to_go_string(loss_metric_name), GoString),
         (str_to_go_string(eval_metric_name if eval_metric_name else ''), GoString),
+        (parsimony_coefficient, ctypes.c_double),
 
         (str_to_go_string(funcs), GoString),
         (const_min, ctypes.c_double),
@@ -152,8 +151,6 @@ def fit(X_train: np.ndarray,
         (p_point_mutation, ctypes.c_double),
         (point_mutation_rate, ctypes.c_double),
         (p_sub_tree_crossover, ctypes.c_double),
-
-        (parsimony_coefficient, ctypes.c_double),
 
         (seed, ctypes.c_longlong),
         (verbose, ctypes.c_bool)

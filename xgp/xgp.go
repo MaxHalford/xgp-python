@@ -9,6 +9,7 @@ import (
 	"github.com/MaxHalford/xgp/metrics"
 )
 
+// Fit an Estimator and return the best Program.
 //export Fit
 func Fit(
 	XTrain [][]float64,
@@ -20,6 +21,7 @@ func Fit(
 
 	lossMetricName string,
 	evalMetricName string,
+	parsimonyCoeff float64,
 
 	funcs string,
 	constMin float64,
@@ -35,12 +37,10 @@ func Fit(
 	nGenerations int,
 	nPolishGenerations int,
 	pHoistMutation float64,
-	pSubTreeMutation float64,
+	pSubtreeMutation float64,
 	pPointMutation float64,
 	pointMutationRate float64,
-	pSubTreeCrossover float64,
-
-	parsimonyCoeff float64,
+	pSubtreeCrossover float64,
 
 	seed int64,
 	verbose bool,
@@ -100,10 +100,10 @@ func Fit(
 		NGenerations:       nGenerations,
 		NPolishGenerations: nPolishGenerations,
 		PHoistMutation:     pHoistMutation,
-		PSubTreeMutation:   pSubTreeMutation,
+		PSubtreeMutation:   pSubtreeMutation,
 		PPointMutation:     pPointMutation,
 		PointMutationRate:  pointMutationRate,
-		PSubTreeCrossover:  pSubTreeCrossover,
+		PSubtreeCrossover:  pSubtreeCrossover,
 
 		ParsimonyCoeff: parsimonyCoeff,
 		RNG:            rng,

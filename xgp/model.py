@@ -14,6 +14,9 @@ class XGPModel(abc.ABC, base.BaseEstimator):
     ----------
     loss_metric : str
         Metric used for scoring program; determines the task to perform.
+    parsimony_coefficient : float
+        Parsimony coefficient by which a program's height is multiplied to
+        penalize it's fitness.
     funcs : str
         Comma-separated set of authorised functions.
     const_min : float
@@ -51,9 +54,6 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         Probability of modifying an operator during point mutation.
     p_sub_tree_crossover : float
         Probability of applying subtree crossover.
-    parsimony_coefficient : float
-        Parsimony coefficient by which a program's height is multiplied to
-        penalize it's fitness.
     random_state : int, RandomState instance or None, optional (default=None)
         Control the randomization of the algorithm
 
@@ -75,16 +75,17 @@ class XGPModel(abc.ABC, base.BaseEstimator):
     def default_loss(self):
         pass
 
-    def __init__(self, loss_metric='', funcs='sum,sub,mul,div',
-                 const_min=-5, const_max=5, p_constant=0.5, p_full=0.5,
-                 p_terminal=0.3, min_height=3, max_height=5, n_populations=1,
-                 n_individuals=100, n_generations=30, n_polish_generations=0,
+    def __init__(self, loss_metric='', parsimony_coefficient=0.00001,
+                 funcs='sum,sub,mul,div', const_min=-5, const_max=5,
+                 p_constant=0.5, p_full=0.5, p_terminal=0.3, min_height=3,
+                 max_height=5, n_populations=1, n_individuals=100,
+                 n_generations=30, n_polish_generations=0,
                  p_hoist_mutation=0.1, p_sub_tree_mutation=0.1,
                  p_point_mutation=0.1, point_mutation_rate=0.5,
-                 p_sub_tree_crossover=0.3, parsimony_coefficient=0.00001,
-                 random_state=None):
+                 p_sub_tree_crossover=0.3, random_state=None):
 
         self.loss_metric = loss_metric
+        self.parsimony_coefficient = parsimony_coefficient
 
         self.funcs = funcs
         self.const_min = const_min
@@ -104,8 +105,6 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         self.p_full = p_full
         self.p_terminal = p_terminal
         self.p_sub_tree_crossover = p_sub_tree_crossover
-
-        self.parsimony_coefficient = parsimony_coefficient
 
         self.random_state = random_state
 
@@ -136,6 +135,7 @@ class XGPModel(abc.ABC, base.BaseEstimator):
 
             loss_metric_name=self.loss_metric if self.loss_metric else self.default_loss,
             eval_metric_name=eval_metric,
+            parsimony_coefficient=self.parsimony_coefficient,
 
             funcs=self.funcs,
             const_min=self.const_min,
@@ -155,8 +155,6 @@ class XGPModel(abc.ABC, base.BaseEstimator):
             p_point_mutation=self.p_point_mutation,
             point_mutation_rate=self.point_mutation_rate,
             p_sub_tree_crossover=self.p_sub_tree_crossover,
-
-            parsimony_coefficient=self.parsimony_coefficient,
 
             seed=utils.check_random_state(self.random_state).randint(2 ** 24),
             verbose=verbose
