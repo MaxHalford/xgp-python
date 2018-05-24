@@ -20,8 +20,15 @@ if [[ $TRAVIS_TAG ]];
     conda update --yes conda
     popd
 
+    # Build wheels
     conda create -n wheelenv --yes python=3.5
     source activate wheelenv
     pip install cibuildwheel==0.8.0
+    python --version
+    python setup.py --name
     cibuildwheel --output-dir wheelhouse
+
+    # Upload wheels
+    pip install twine
+    twine upload wheelhouse/*.whl
     fi
