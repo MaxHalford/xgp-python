@@ -23,9 +23,7 @@ if [[ $TRAVIS_TAG ]];
     # Build wheels
     conda create -n wheelenv --yes python=3.5
     source activate wheelenv
-    pip install cibuildwheel==0.8.0
-    python --version
-    python setup.py --name
+    pip install cibuildwheel==0.8.0 numpy scipy
     cibuildwheel --output-dir wheelhouse
 
     # Upload wheels
