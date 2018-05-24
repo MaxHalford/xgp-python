@@ -2,6 +2,7 @@
 # itself
 if [[ $TRAVIS_TAG ]];
     then
+    pushd .
     cd
     mkdir -p download
     cd download
@@ -17,6 +18,8 @@ if [[ $TRAVIS_TAG ]];
     cd ..
     export PATH=/home/travis/miniconda/bin:$PATH
     conda update --yes conda
+    popd
+
     conda create -n wheelenv --yes python=3.5
     source activate wheelenv
     pip install cibuildwheel==0.8.0
