@@ -32,4 +32,4 @@ script: ci_scripts/travis.sh
 jobs:
   include:
     - stage: wheels
-      script: ci_scripts/wheels.sh
+      script: if [[ $TRAVIS_TAG ]]; then ci_scripts/wheels.sh fi

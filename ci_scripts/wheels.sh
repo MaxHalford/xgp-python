@@ -1,6 +1,5 @@
 # Use the miniconda installer for faster download / install of conda
 # itself
-pushd .
 cd
 mkdir -p download
 cd download
@@ -16,7 +15,7 @@ chmod +x miniconda.sh && ./miniconda.sh -b
 cd ..
 export PATH=/home/travis/miniconda/bin:$PATH
 conda update --yes conda
-popd
-
+conda create -n wheelenv --yes python=3.5
+source activate wheelenv
 pip install cibuildwheel==0.8.0
 cibuildwheel --output-dir wheelhouse
