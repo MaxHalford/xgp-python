@@ -12,11 +12,3 @@ if [[ "$COVERAGE" == "true" ]]; then
     # be published.
     coveralls || echo "Coveralls upload failed"
 fi
-
-# Upload wheels
-if [[ "$TRAVIS_TAG" ]]; then
-    python -m pip install cibuildwheel==0.7.1
-    cibuildwheel --output-dir wheelhouse
-    python -m pip install twine
-    python -m twine upload wheelhouse/*.whl
-fi

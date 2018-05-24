@@ -15,14 +15,17 @@ env:
     - TEST_DIR=/tmp/test_dir/
     - MODULE=xgp
     - TWINE_USERNAME=MaxHalford
-  matrix:
-    - DISTRIB="conda" PYTHON_VERSION="3.5" COVERAGE="false"
-      NUMPY_VERSION="1.10.4" SCIPY_VERSION="0.17.0" CYTHON_VERSION="0.23.4"
-      CIBW_SKIP=*
-    - DISTRIB="conda" PYTHON_VERSION="3.6" COVERAGE="true"
-      NUMPY_VERSION="1.14.3" SCIPY_VERSION="1.1.0" CYTHON_VERSION="0.28.2"
-      CIBW_SKIP=cp27-*
 
-install: source ci_scripts/travis/install.sh
-script: bash ci_scripts/travis/test.sh
-after_success: source ci_scripts/travis/success.sh
+jobs:
+  include:
+    - stage: Test
+      DISTRIB="conda"
+      PYTHON_VERSION="3.5"
+      COVERAGE="false"
+      NUMPY_VERSION="1.10.4"
+      SCIPY_VERSION="0.17.0"
+      CYTHON_VERSION="0.23.4"
+      script:
+        - source ci_scripts/travis/install.sh
+        - bash ci_scripts/travis/test.sh
+        - source ci_scripts/travis/success.sh
