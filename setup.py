@@ -19,7 +19,7 @@ except ImportError:
     sys.exit(1)
 
 setup(name='xgp',
-      version='0.0.1',
+      version='0.0.2',
       description='XGP scikit-learn API',
       author='Max Halford',
       packages=find_packages(),
