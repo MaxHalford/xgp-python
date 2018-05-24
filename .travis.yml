@@ -17,9 +17,9 @@ env:
     - TWINE_USERNAME=MaxHalford
     - CIBW_SKIP="cp27-* cp34-*"
     - CIBW_BEFORE_BUILD="pip install numpy scipy && \
-        sudo curl -O https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz && \
-        sudo tar -xvf go1.9.1.linux-amd64.tar.gz && \
-        sudo mv go /usr/local
+        curl -O https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz && \
+        tar -xvf go1.9.1.linux-amd64.tar.gz && \
+        mv go /usr/local
       "
     - CIBW_BUILD_VERBOSITY=1
   matrix:
