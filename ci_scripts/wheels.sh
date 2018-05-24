@@ -24,9 +24,11 @@ if [[ $TRAVIS_TAG ]];
     conda create -n wheelenv --yes python=3.5
     source activate wheelenv
     pip install cibuildwheel==0.8.0 numpy scipy
-    cibuildwheel --output-dir wheelhouse
+    pip install setuptools-golang
+    setuptools-golang-build-manylinux-wheels
+    #cibuildwheel --output-dir wheelhouse
 
     # Upload wheels
     pip install twine
-    twine upload wheelhouse/*.whl
+    twine upload dist/*.whl
     fi
