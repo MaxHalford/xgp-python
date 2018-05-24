@@ -12,10 +12,11 @@ cache:
 
 env:
   global:
-    # Directory where tests are run from
     - TEST_DIR=/tmp/test_dir/
     - MODULE=xgp
     - TWINE_USERNAME=MaxHalford
+    - CIBW_SKIP=cp27-* cp34-*
+    - CIBW_BEFORE_BUILD=pip install numpy scipy
   matrix:
     - DISTRIB="conda" PYTHON_VERSION="3.5" COVERAGE="false"
       NUMPY_VERSION="1.10.4" SCIPY_VERSION="0.17.0" CYTHON_VERSION="0.23.4"
