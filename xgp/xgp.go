@@ -59,7 +59,7 @@ func Fit(
 	}
 
 	// Determine the loss metric
-	lossMetric, err := metrics.GetMetric(lossMetricName, 1)
+	lossMetric, err := metrics.ParseMetric(lossMetricName, 1)
 	if err != nil {
 		panic(err)
 	}
@@ -68,7 +68,7 @@ func Fit(
 	if evalMetricName == "" {
 		evalMetricName = lossMetricName
 	}
-	evalMetric, err := metrics.GetMetric(evalMetricName, 1)
+	evalMetric, err := metrics.ParseMetric(evalMetricName, 1)
 	if err != nil {
 		panic(err)
 	}

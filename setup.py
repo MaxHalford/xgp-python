@@ -20,7 +20,7 @@ except ImportError:
 
 setup(name='xgp',
       version='0.0.2',
-      description='XGP scikit-learn API',
+      description='XGP Python package with a scikit-learn interface',
       author='Max Halford',
       packages=find_packages(),
       install_requires=INSTALL_REQUIRES,
