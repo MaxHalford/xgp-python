@@ -23,6 +23,10 @@ env:
     - DISTRIB="conda" PYTHON_VERSION="3.6" COVERAGE="true"
       NUMPY_VERSION="1.14.3" SCIPY_VERSION="1.1.0" CYTHON_VERSION="0.28.2"
 
+stages:
+  - test
+  - wheels
+
 before_script:
   - chmod +x ci_scripts/travis.sh
   - chmod +x ci_scripts/wheels.sh
@@ -32,4 +36,4 @@ script: ci_scripts/travis.sh
 jobs:
   include:
     - stage: wheels
-      script: if [[ $TRAVIS_TAG ]]; then ci_scripts/wheels.sh fi
+      script: ci_scripts/wheels.sh
