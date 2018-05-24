@@ -23,10 +23,8 @@ if [[ $TRAVIS_TAG ]];
     # Build wheels
     conda create -n wheelenv --yes python=3.5
     source activate wheelenv
-    pip install cibuildwheel==0.8.0 numpy scipy
     pip install setuptools-golang
-    setuptools-golang-build-manylinux-wheels
-    #cibuildwheel --output-dir wheelhouse
+    setuptools-golang-build-manylinux-wheels --pythons cp35-cp35m,cp36-cp36m
 
     # Upload wheels
     pip install twine
