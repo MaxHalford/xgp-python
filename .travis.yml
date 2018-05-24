@@ -7,8 +7,8 @@ cache:
   # We use three different cache directory
   # to work around a Travis bug with multi-platform cache
   directories:
-  - $HOME/.cache/pip
-  - $HOME/download
+    - $HOME/.cache/pip
+    - $HOME/download
 
 env:
   global:
@@ -21,6 +21,10 @@ env:
       NUMPY_VERSION="1.10.4" SCIPY_VERSION="0.17.0" CYTHON_VERSION="0.23.4"
     - DISTRIB="conda" PYTHON_VERSION="3.6" COVERAGE="true"
       NUMPY_VERSION="1.14.3" SCIPY_VERSION="1.1.0" CYTHON_VERSION="0.28.2"
+
+before_script:
+  - chmod +x ci_scripts/travis.sh
+  - chmod +x ci_scripts/wheels.sh
 
 script: ci_scripts/travis.sh
 
