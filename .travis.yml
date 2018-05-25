@@ -16,12 +16,7 @@ env:
     - MODULE=xgp
     - TWINE_USERNAME=MaxHalford
     - CIBW_SKIP="cp27-* cp34-*"
-    - CIBW_BEFORE_BUILD="pip install numpy scipy &&
-        curl -O https://storage.googleapis.com/golang/go1.9.1.linux-amd64.tar.gz &&
-        tar -xf go1.9.1.linux-amd64.tar.gz &&
-        mv go /usr/local &&
-        export PATH=$PATH:/usr/local
-      "
+    - CIBW_BEFORE_BUILD="pip install numpy scipy && yum install golang"
     - CIBW_BUILD_VERBOSITY=1
   matrix:
     - DISTRIB="conda" PYTHON_VERSION="3.5" COVERAGE="false"
