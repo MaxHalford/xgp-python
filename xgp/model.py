@@ -73,7 +73,7 @@ class XGPModel(abc.ABC, base.BaseEstimator):
     @property
     @abc.abstractmethod
     def default_loss(self):
-        pass
+        raise ValueError('No default loss has been specified, please specify one')
 
     def __init__(self, loss_metric='', parsimony_coefficient=0.00001,
                  funcs='sum,sub,mul,div', const_min=-5, const_max=5,

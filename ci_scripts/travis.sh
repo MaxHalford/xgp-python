@@ -42,9 +42,9 @@ mkdir -p $TEST_DIR
 cd $TEST_DIR
 
 if [[ "$COVERAGE" == "true" ]]; then
-    nosetests -s --with-coverage --cover-package=$MODULE $MODULE
+    nosetests -s --with-doctest --with-coverage --cover-package=$MODULE $MODULE
 else
-    nosetests -s $MODULE
+    nosetests -s --doctest-glob=README.md $MODULE
 fi
 
 if [[ "$COVERAGE" == "true" ]]; then
