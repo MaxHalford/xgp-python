@@ -1,5 +1,6 @@
 # XGP Python package
 
+[![PyPI version](https://badge.fury.io/py/xgp.svg)](https://badge.fury.io/py/xgp)
 [![Travis build status](https://travis-ci.org/MaxHalford/xgp-python.svg?branch=master)](https://travis-ci.org/MaxHalford/xgp-python)
 [![Coverage Status](https://coveralls.io/repos/github/MaxHalford/xgp-python/badge.svg?branch=master)](https://coveralls.io/github/MaxHalford/xgp-python?branch=master)
 
