@@ -23,12 +23,12 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         Lower bound used for generating constants.
     const_max : float
         Upper bound used for generating constants.
-    p_constant : float
+    p_const : float
         Probability of generating a constant instead of a variable.
     p_full : float
         Probability of using full initialization during ramped half-and-half
         initialization.
-    p_terminal : float
+    p_leaf : float
         Probability of generating a terminal node during ramped half-and-half
         initialization.
     min_height : int
@@ -77,7 +77,7 @@ class XGPModel(abc.ABC, base.BaseEstimator):
 
     def __init__(self, loss_metric='', parsimony_coefficient=0.00001,
                  funcs='sum,sub,mul,div', const_min=-5, const_max=5,
-                 p_constant=0.5, p_full=0.5, p_terminal=0.3, min_height=3,
+                 p_const=0.5, p_full=0.5, p_leaf=0.3, min_height=3,
                  max_height=5, n_populations=1, n_individuals=100,
                  n_generations=30, n_polish_generations=0,
                  p_hoist_mutation=0.1, p_sub_tree_mutation=0.1,
@@ -101,9 +101,9 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         self.n_individuals = n_individuals
         self.n_generations = n_generations
         self.n_polish_generations = n_polish_generations
-        self.p_constant = p_constant
+        self.p_const = p_const
         self.p_full = p_full
-        self.p_terminal = p_terminal
+        self.p_leaf = p_leaf
         self.p_sub_tree_crossover = p_sub_tree_crossover
 
         self.random_state = random_state
@@ -140,9 +140,9 @@ class XGPModel(abc.ABC, base.BaseEstimator):
             funcs=self.funcs,
             const_min=self.const_min,
             const_max=self.const_max,
-            p_constant=self.p_constant,
+            p_const=self.p_const,
             p_full=self.p_full,
-            p_terminal=self.p_terminal,
+            p_leaf=self.p_leaf,
             min_height=self.min_height,
             max_height=self.max_height,
 

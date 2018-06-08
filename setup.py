@@ -1,5 +1,4 @@
 from __future__ import print_function
-import sys
 from setuptools import Extension, setup, find_packages
 
 with open('requirements.txt') as f:
