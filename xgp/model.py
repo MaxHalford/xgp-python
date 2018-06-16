@@ -17,6 +17,8 @@ class XGPModel(abc.ABC, base.BaseEstimator):
     parsimony_coefficient : float
         Parsimony coefficient by which a program's height is multiplied to
         penalize it's fitness.
+    polish_best : bool
+        Whether or not to polish the best program.
     funcs : str
         Comma-separated set of authorised functions.
     const_min : float
@@ -42,8 +44,6 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         algorithm.
     n_generations : int
         Number of generations used in the GA.
-    n_polish_generations : int
-        Number of generations used to polish the best program.
     p_hoist_mutation : float
         Probability of applying hoist mutation.
     p_sub_tree_mutation : float
@@ -75,17 +75,15 @@ class XGPModel(abc.ABC, base.BaseEstimator):
     def default_loss(self):
         raise ValueError('No default loss has been specified, please specify one')
 
-    def __init__(self, loss_metric='', parsimony_coefficient=0.00001,
-                 funcs='sum,sub,mul,div', const_min=-5, const_max=5,
-                 p_const=0.5, p_full=0.5, p_leaf=0.3, min_height=3,
-                 max_height=5, n_populations=1, n_individuals=100,
-                 n_generations=30, n_polish_generations=0,
-                 p_hoist_mutation=0.1, p_sub_tree_mutation=0.1,
-                 p_point_mutation=0.1, point_mutation_rate=0.5,
-                 p_sub_tree_crossover=0.3, random_state=None):
+    def __init__(self, loss_metric='', parsimony_coefficient=0.00001,  funcs='sum,sub,mul,div',
+                 polish_best=True, const_min=-5, const_max=5, p_const=0.5, p_full=0.5, p_leaf=0.3,
+                 min_height=3, max_height=5, n_populations=1, n_individuals=100, n_generations=30,
+                 p_hoist_mutation=0.1, p_sub_tree_mutation=0.1, p_point_mutation=0.1,
+                 point_mutation_rate=0.5, p_sub_tree_crossover=0.3, random_state=None):
 
         self.loss_metric = loss_metric
         self.parsimony_coefficient = parsimony_coefficient
+        self.polish_best = polish_best
 
         self.funcs = funcs
         self.const_min = const_min
@@ -100,7 +98,6 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         self.n_populations = n_populations
         self.n_individuals = n_individuals
         self.n_generations = n_generations
-        self.n_polish_generations = n_polish_generations
         self.p_const = p_const
         self.p_full = p_full
         self.p_leaf = p_leaf
@@ -136,6 +133,7 @@ class XGPModel(abc.ABC, base.BaseEstimator):
             loss_metric_name=self.loss_metric if self.loss_metric else self.default_loss,
             eval_metric_name=eval_metric,
             parsimony_coefficient=self.parsimony_coefficient,
+            polish_best=self.polish_best,
 
             funcs=self.funcs,
             const_min=self.const_min,

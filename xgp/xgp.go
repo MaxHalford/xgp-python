@@ -22,6 +22,7 @@ func Fit(
 	lossMetricName string,
 	evalMetricName string,
 	parsimonyCoeff float64,
+	polishBest bool,
 
 	funcs string,
 	constMin float64,
@@ -35,7 +36,6 @@ func Fit(
 	nPopulations uint,
 	nIndividuals uint,
 	nGenerations uint,
-	nPolishGenerations uint,
 	pHoistMutation float64,
 	pSubtreeMutation float64,
 	pPointMutation float64,
@@ -83,8 +83,10 @@ func Fit(
 
 	// Instantiate an Estimator
 	var config = xgp.Config{
-		LossMetric: lossMetric,
-		EvalMetric: evalMetric,
+		LossMetric:     lossMetric,
+		EvalMetric:     evalMetric,
+		ParsimonyCoeff: parsimonyCoeff,
+		PolishBest:     polishBest,
 
 		Funcs:     funcs,
 		ConstMin:  constMin,
@@ -95,18 +97,16 @@ func Fit(
 		MinHeight: minHeight,
 		MaxHeight: maxHeight,
 
-		NPopulations:       nPopulations,
-		NIndividuals:       nIndividuals,
-		NGenerations:       nGenerations,
-		NPolishGenerations: nPolishGenerations,
-		PHoistMutation:     pHoistMutation,
-		PSubtreeMutation:   pSubtreeMutation,
-		PPointMutation:     pPointMutation,
-		PointMutationRate:  pointMutationRate,
-		PSubtreeCrossover:  pSubtreeCrossover,
+		NPopulations:      nPopulations,
+		NIndividuals:      nIndividuals,
+		NGenerations:      nGenerations,
+		PHoistMutation:    pHoistMutation,
+		PSubtreeMutation:  pSubtreeMutation,
+		PPointMutation:    pPointMutation,
+		PointMutationRate: pointMutationRate,
+		PSubtreeCrossover: pSubtreeCrossover,
 
-		ParsimonyCoeff: parsimonyCoeff,
-		RNG:            rng,
+		RNG: rng,
 	}
 
 	estimator, err := config.NewEstimator()
