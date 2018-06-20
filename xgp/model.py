@@ -147,7 +147,6 @@ class XGPModel(abc.ABC, base.BaseEstimator):
             n_populations=self.n_populations,
             n_individuals=self.n_individuals,
             n_generations=self.n_generations,
-            n_polish_generations=self.n_polish_generations,
             p_hoist_mutation=self.p_hoist_mutation,
             p_sub_tree_mutation=self.p_sub_tree_mutation,
             p_point_mutation=self.p_point_mutation,
