@@ -6,7 +6,7 @@ with open('requirements.txt') as f:
 
 
 setup(name='xgp',
-      version='0.0.2',
+      version='0.0.3',
       description='XGP Python package with a scikit-learn interface',
       author='Max Halford',
       packages=find_packages(),

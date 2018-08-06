@@ -82,7 +82,7 @@ func Fit(
 	}
 
 	// Instantiate an Estimator
-	var config = xgp.Config{
+	var config = xgp.GPConfig{
 		LossMetric:     lossMetric,
 		EvalMetric:     evalMetric,
 		ParsimonyCoeff: parsimonyCoeff,
@@ -109,7 +109,7 @@ func Fit(
 		RNG: rng,
 	}
 
-	estimator, err := config.NewEstimator()
+	estimator, err := config.NewGP()
 	if err != nil {
 		panic(err)
 	}
