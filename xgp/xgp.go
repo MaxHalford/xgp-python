@@ -2,12 +2,22 @@ package main
 
 import "C"
 import (
+	"fmt"
 	"math/rand"
 	"time"
 
 	"github.com/MaxHalford/xgp"
+	"github.com/MaxHalford/xgp/meta"
 	"github.com/MaxHalford/xgp/metrics"
 )
+
+type errUnknownFlavor struct {
+	flavor string
+}
+
+func (e errUnknownFlavor) Error() string {
+	return fmt.Sprintf("'%s' is not a recognized flavor, has to be one of ('vanilla', 'boosting')", e.flavor)
+}
 
 // Fit an Estimator and return the best Program.
 //export Fit
@@ -19,11 +29,13 @@ func Fit(
 	YVal []float64,
 	WVal []float64,
 
-	lossMetricName string,
-	evalMetricName string,
+	flavor string,
+
+	// GP learning parameters
+	lossName string,
+	evalName string,
 	parsimonyCoeff float64,
 	polishBest bool,
-
 	funcs string,
 	constMin float64,
 	constMax float64,
@@ -33,15 +45,23 @@ func Fit(
 	minHeight uint,
 	maxHeight uint,
 
-	nPopulations uint,
-	nIndividuals uint,
+	// GA parameters
+	nPops uint,
+	popSize uint,
 	nGenerations uint,
-	pHoistMutation float64,
-	pSubtreeMutation float64,
-	pPointMutation float64,
-	pointMutationRate float64,
-	pSubtreeCrossover float64,
+	pHoistMut float64,
+	pSubtreeMut float64,
+	pPointMut float64,
+	pointMutRate float64,
+	pSubtreeCross float64,
 
+	// Ensemble learning parameters
+	nRounds uint,
+	nEarlyStoppingRounds uint,
+	learningRate float64,
+	lineSearch bool,
+
+	// Other
 	seed int64,
 	verbose bool,
 ) *C.char {
@@ -59,16 +79,16 @@ func Fit(
 	}
 
 	// Determine the loss metric
-	lossMetric, err := metrics.ParseMetric(lossMetricName, 1)
+	lossMetric, err := metrics.ParseMetric(lossName, 1)
 	if err != nil {
 		panic(err)
 	}
 
 	// Determine the evaluation metric
-	if evalMetricName == "" {
-		evalMetricName = lossMetricName
+	if evalName == "" {
+		evalName = lossName
 	}
-	evalMetric, err := metrics.ParseMetric(evalMetricName, 1)
+	evalMetric, err := metrics.ParseMetric(evalName, 1)
 	if err != nil {
 		panic(err)
 	}
@@ -97,31 +117,79 @@ func Fit(
 		MinHeight: minHeight,
 		MaxHeight: maxHeight,
 
-		NPopulations:      nPopulations,
-		NIndividuals:      nIndividuals,
+		NPopulations:      nPops,
+		NIndividuals:      popSize,
 		NGenerations:      nGenerations,
-		PHoistMutation:    pHoistMutation,
-		PSubtreeMutation:  pSubtreeMutation,
-		PPointMutation:    pPointMutation,
-		PointMutationRate: pointMutationRate,
-		PSubtreeCrossover: pSubtreeCrossover,
+		PHoistMutation:    pHoistMut,
+		PSubtreeMutation:  pSubtreeMut,
+		PPointMutation:    pPointMut,
+		PointMutationRate: pointMutRate,
+		PSubtreeCrossover: pSubtreeCross,
 
 		RNG: rng,
 	}
 
-	estimator, err := config.NewGP()
-	if err != nil {
-		panic(err)
+	switch flavor {
+
+	case "vanilla":
+		gp, err := config.NewGP()
+		if err != nil {
+			panic(err)
+		}
+		err = gp.Fit(XTrain, YTrain, WTrain, XVal, YVal, WVal, verbose)
+		if err != nil {
+			panic(err)
+		}
+		best, err := gp.BestProgram()
+		if err != nil {
+			panic(err)
+		}
+		bytes, err := best.MarshalJSON()
+		if err != nil {
+			panic(err)
+		}
+		return C.CString(string(bytes))
+
+	case "boosting":
+		loss, ok := lossMetric.(metrics.DiffMetric)
+		if !ok {
+			panic(fmt.Errorf("The '%s' metric can't be used for gradient boosting because it is"+
+				" not differentiable", lossMetric.String()))
+		}
+		var ls meta.LineSearcher
+		if lineSearch {
+			ls = meta.GoldenLineSearch{
+				Min: 0,
+				Max: 10,
+				Tol: 1e-10,
+			}
+		}
+		gb, err := meta.NewGradientBoosting(
+			config,
+			nRounds,
+			nEarlyStoppingRounds,
+			learningRate,
+			ls,
+			loss,
+		)
+		if err != nil {
+			panic(err)
+		}
+		err = gb.Fit(XTrain, YTrain, nil, XVal, YVal, nil, verbose)
+		if err != nil {
+			panic(err)
+		}
+		bytes, err := gb.MarshalJSON()
+		if err != nil {
+			panic(err)
+		}
+		return C.CString(string(bytes))
+
 	}
 
-	// Fit the Estimator
-	_, err = estimator.Fit(XTrain, YTrain, WTrain, XVal, YVal, WVal, verbose)
-	if err != nil {
-		panic(err)
-	}
+	panic(errUnknownFlavor{flavor})
 
-	// Return the string representation of the best Program
-	return C.CString(estimator.BestProgram().String())
+	return C.CString("")
 }
 
 func main() {}

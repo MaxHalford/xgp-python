@@ -1,5 +1,7 @@
 import abc
+import json
 
+import numpy as np
 from sklearn import base
 from sklearn import utils
 
@@ -12,6 +14,10 @@ class XGPModel(abc.ABC, base.BaseEstimator):
 
     Parameters
     ----------
+    flavor : str
+        Indicates what kind of algoritm to perform. The possible values are:
+            - 'vanilla': plain genetic programming
+            - 'boosting': gradient boosting on top of genetic programming
     loss_metric : str
         Metric used for scoring program; determines the task to perform.
     parsimony_coefficient : float
@@ -54,6 +60,14 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         Probability of modifying an operator during point mutation.
     p_sub_tree_crossover : float
         Probability of applying subtree crossover.
+    n_rounds : int
+        Number of rounds to use in case of an ensemble model.
+    n_early_stopping_rounds : int
+        Number of rounds used when motinoring early stopping.
+    learning_rate : float
+        Learning rate used for gradient boosting.
+    line_search : bool
+        Whether or not to use line search for gradient boosting.
     random_state : int, RandomState instance or None, optional (default=None)
         Control the randomization of the algorithm
 
@@ -66,8 +80,8 @@ class XGPModel(abc.ABC, base.BaseEstimator):
 
     Attributes
     ----------
-    program_str_ : str
-        The string representation of the best program.
+    program_json_ : dict
+        The JSON representation of the best program.
     """
 
     @property
@@ -75,16 +89,21 @@ class XGPModel(abc.ABC, base.BaseEstimator):
     def default_loss(self):
         raise ValueError('No default loss has been specified, please specify one')
 
-    def __init__(self, loss_metric='', parsimony_coefficient=0.00001,  funcs='sum,sub,mul,div',
-                 polish_best=True, const_min=-5, const_max=5, p_const=0.5, p_full=0.5, p_leaf=0.3,
-                 min_height=3, max_height=5, n_populations=1, n_individuals=100, n_generations=30,
-                 p_hoist_mutation=0.1, p_sub_tree_mutation=0.1, p_point_mutation=0.1,
-                 point_mutation_rate=0.5, p_sub_tree_crossover=0.3, random_state=None):
+    def __init__(self, flavor='boosting', loss_metric='', parsimony_coefficient=0.00001,
+                 polish_best=True, funcs='add,sub,mul,div', const_min=-5, const_max=5, p_const=0.5,
+                 p_full=0.5, p_leaf=0.3, min_height=3, max_height=5, n_populations=1,
+                 n_individuals=100, n_generations=30, p_hoist_mutation=0.1, p_sub_tree_mutation=0.1,
+                 p_point_mutation=0.1, point_mutation_rate=0.5, p_sub_tree_crossover=0.3,
+                 n_rounds=50, n_early_stopping_rounds=5, learning_rate=0.08, line_search=True,
+                 random_state=None):
 
-        self.loss_metric = loss_metric
+
+        self.flavor = flavor
+
+        # GP parameters
+        self.loss_metric = loss_metric if loss_metric else self.default_loss
         self.parsimony_coefficient = parsimony_coefficient
         self.polish_best = polish_best
-
         self.funcs = funcs
         self.const_min = const_min
         self.const_max = const_max
@@ -95,6 +114,7 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         self.min_height = min_height
         self.max_height = max_height
 
+        # GA parameters
         self.n_populations = n_populations
         self.n_individuals = n_individuals
         self.n_generations = n_generations
@@ -103,6 +123,13 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         self.p_leaf = p_leaf
         self.p_sub_tree_crossover = p_sub_tree_crossover
 
+        # Ensemble parameters
+        self.n_rounds = n_rounds
+        self.n_early_stopping_rounds = n_early_stopping_rounds
+        self.learning_rate = learning_rate
+        self.line_search = line_search
+
+        # Other
         self.random_state = random_state
 
     def fit(self, X, y, sample_weight=None, eval_set=None, eval_metric=None,
@@ -122,7 +149,7 @@ class XGPModel(abc.ABC, base.BaseEstimator):
             y_val = eval_set[1]
             X_val, y_val = utils.check_X_y(X_val, y_val)
 
-        program_bytes_ = binding.fit(
+        program_raw_json = binding.fit(
             X_train=X,
             y_train=y,
             w_train=sample_weight,
@@ -130,11 +157,13 @@ class XGPModel(abc.ABC, base.BaseEstimator):
             y_val=y_val,
             w_val=eval_sample_weight,
 
-            loss_metric_name=self.loss_metric if self.loss_metric else self.default_loss,
+            flavor=self.flavor,
+
+            # GP parameters
+            loss_metric_name=self.loss_metric,
             eval_metric_name=eval_metric,
             parsimony_coefficient=self.parsimony_coefficient,
             polish_best=self.polish_best,
-
             funcs=self.funcs,
             const_min=self.const_min,
             const_max=self.const_max,
@@ -144,6 +173,7 @@ class XGPModel(abc.ABC, base.BaseEstimator):
             min_height=self.min_height,
             max_height=self.max_height,
 
+            # GA parameters
             n_populations=self.n_populations,
             n_individuals=self.n_individuals,
             n_generations=self.n_generations,
@@ -153,15 +183,33 @@ class XGPModel(abc.ABC, base.BaseEstimator):
             point_mutation_rate=self.point_mutation_rate,
             p_sub_tree_crossover=self.p_sub_tree_crossover,
 
+            # Ensemble parameters
+            n_rounds=self.n_rounds,
+            n_early_stopping_rounds=self.n_early_stopping_rounds,
+            learning_rate=self.learning_rate,
+            line_search=self.line_search,
+
+            # Other
             seed=utils.check_random_state(self.random_state).randint(2 ** 24),
             verbose=verbose
         )
 
-        self.program_str_ = program_bytes_.decode('utf-8')
+        self.model_json_ = json.loads(program_raw_json.decode('utf-8'))
 
         return self
 
     def predict(self, X):
-        utils.validation.check_is_fitted(self, 'program_str_')
+        utils.validation.check_is_fitted(self, 'model_json_')
         X = utils.check_array(X)
-        return parse.parse_code(self.program_str_)(X)
+
+        if self.flavor == 'vanilla':
+            return parse.parse_program_json(self.model_json_['op'])(X)
+
+        if self.flavor == 'boosting':
+            y_pred = np.full(shape=len(X), fill_value=self.model_json_['y_mean'])
+            for prog, step in zip(map(lambda prog: parse.parse_program_json(prog['op']), self.model_json_['programs']), self.model_json_['steps']):
+                update = prog(X)
+                y_pred = y_pred - self.learning_rate * step * update
+            return y_pred
+
+        raise ValueError('Unknown flavor')

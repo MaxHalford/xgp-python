@@ -76,11 +76,13 @@ def fit(X_train: np.ndarray,
         y_val: np.ndarray,
         w_val: np.ndarray,
 
+        flavor: str,
+
+        # GP parameters
         loss_metric_name: str,
         eval_metric_name: str,
         parsimony_coefficient: float,
         polish_best: bool,
-
         funcs: str,
         const_min: float,
         const_max: float,
@@ -90,6 +92,7 @@ def fit(X_train: np.ndarray,
         min_height: int,
         max_height: int,
 
+        # GA parameters
         n_populations: int,
         n_individuals: int,
         n_generations: int,
@@ -99,6 +102,13 @@ def fit(X_train: np.ndarray,
         point_mutation_rate: float,
         p_sub_tree_crossover: float,
 
+        # Ensemble parameters
+        n_rounds: int,
+        n_early_stopping_rounds: int,
+        learning_rate: float,
+        line_search: bool,
+
+        # Other
         seed: int,
         verbose: bool):
     """Refers to the Fit method in main.go"""
@@ -129,11 +139,13 @@ def fit(X_train: np.ndarray,
         (numpy_to_slice(y_val if y_val is not None else np.zeros(shape=0)), GoFloat64Slice),
         (numpy_to_slice(w_val if w_val is not None else np.zeros(shape=0)), GoFloat64Slice),
 
+        (str_to_go_string(flavor), GoString),
+
+        # GP learning parameters
         (str_to_go_string(loss_metric_name), GoString),
         (str_to_go_string(eval_metric_name if eval_metric_name else ''), GoString),
         (parsimony_coefficient, ctypes.c_double),
         (polish_best, ctypes.c_bool),
-
         (str_to_go_string(funcs), GoString),
         (const_min, ctypes.c_double),
         (const_max, ctypes.c_double),
@@ -143,6 +155,7 @@ def fit(X_train: np.ndarray,
         (min_height, ctypes.c_ulonglong),
         (max_height, ctypes.c_ulonglong),
 
+        # GA learning parameters
         (n_populations, ctypes.c_ulonglong),
         (n_individuals, ctypes.c_ulonglong),
         (n_generations, ctypes.c_ulonglong),
@@ -152,6 +165,13 @@ def fit(X_train: np.ndarray,
         (point_mutation_rate, ctypes.c_double),
         (p_sub_tree_crossover, ctypes.c_double),
 
+        # Ensemble learning parameters
+        (n_rounds, ctypes.c_ulonglong),
+        (n_early_stopping_rounds, ctypes.c_ulonglong),
+        (learning_rate, ctypes.c_double),
+        (line_search, ctypes.c_bool),
+
+        # Other
         (seed, ctypes.c_longlong),
         (verbose, ctypes.c_bool)
     ]

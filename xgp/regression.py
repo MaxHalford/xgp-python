@@ -8,4 +8,4 @@ class XGPRegressor(model.XGPModel, RegressorMixin):
 
     @property
     def default_loss(self):
-        return 'mae'
+        return 'mse'
