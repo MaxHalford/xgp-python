@@ -23,15 +23,16 @@ env:
 
 stages:
   - test
-  - wheels
+  - name: pypi
+    if: tag IS present
 
 before_script:
   - chmod +x ci_scripts/travis.sh
-  - chmod +x ci_scripts/wheels.sh
-
-script: ci_scripts/travis.sh
+  - chmod +x ci_scripts/pypi.sh
 
 jobs:
   include:
-    - stage: wheels
-      script: ci_scripts/wheels.sh
+    - stage: test
+      script: ci_scripts/travis.sh
+    - stage: pypi
+      script: ci_scripts/pypi.sh

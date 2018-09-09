@@ -4,11 +4,15 @@ from setuptools import Extension, setup, find_packages
 with open('requirements.txt') as f:
     INSTALL_REQUIRES = [l.strip() for l in f.readlines() if l]
 
+with open('README.md', 'r') as f:
+    LONG_DESCRIPTION = f.read()
 
 setup(
     name='xgp',
-    version='0.0.4',
+    version='0.0.3',
     description='XGP Python package with a scikit-learn interface',
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type='text/markdown',
     author='Max Halford',
     packages=find_packages(),
     install_requires=INSTALL_REQUIRES,
