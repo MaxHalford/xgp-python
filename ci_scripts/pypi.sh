@@ -22,7 +22,7 @@ popd
 conda create -n wheelenv --yes python=3.5
 source activate wheelenv
 pip install setuptools-golang
-setuptools-golang-build-manylinux-wheels --pythons cp35-cp35m,cp36-cp36m --golang 1.10
+setuptools-golang-build-manylinux-wheels --pythons cp35-cp35m,cp36-cp36m --golang 1.9
 
 # Upload wheels
 pip install twine
