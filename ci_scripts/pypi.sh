@@ -21,14 +21,8 @@ popd
 # Build wheels
 conda create -n wheelenv --yes python=3.5
 source activate wheelenv
-pip install setuptools-golang
-docker run --rm --volume /home/travis/gopath/src/github.com/MaxHalford/xgp-python/dist:/dist:rw --user 2000:2000 quay.io/pypa/manylinux1_x86_64:latest bash -o pipefail -euxc 'cd /tmp
-curl https://storage.googleapis.com/golang/go1.9.linux-amd64.tar.gz --silent --location | tar -xz
-for py in cp35-cp35m cp36-cp36m; do
-    "/opt/python/$py/bin/pip" wheel --no-deps --wheel-dir /tmp /dist
-done
-ls -al /dist
-'
+pip install setuptools-golang==1.3.0
+setuptools-golang-build-manylinux-wheels --pythons cp35-cp35m,cp36-cp36m --golang 1.9
 
 # Upload wheels
 pip install twine
