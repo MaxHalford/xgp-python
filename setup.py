@@ -20,5 +20,5 @@ setup(
     url='https://maxhalford.github.io/xgp',
     build_golang={'root': 'github.com/MaxHalford/xgp-python'},
     ext_modules=[Extension('xgp', ['xgp/xgp.go'])],
-    setup_requires=['setuptools-golang>=0.2.0'],
+    setup_requires=['setuptools-golang==1.3.0'],
 )
