@@ -22,7 +22,7 @@ class XGPClassifier(model.XGPModel, ClassifierMixin):
 
     def predict(self, X):
         y_pred = super().predict(X)
-        return (y_pred > 0.5).astype(int)
+        return (y_pred > 0).astype(int)
 
     def predict_proba(self, X):
         y_pred = super().predict(X)
