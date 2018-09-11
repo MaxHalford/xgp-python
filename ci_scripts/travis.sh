@@ -42,9 +42,9 @@ mkdir -p $TEST_DIR
 cd $TEST_DIR
 
 if [[ "$COVERAGE" == "true" ]]; then
-    nosetests -s --with-doctest --with-coverage --cover-package=$MODULE $MODULE
+    pytest --doctest-glob='README.md' --cov=$MODULE --verbose
 else
-    nosetests -s --doctest-glob=README.md $MODULE
+    pytest --doctest-glob='README.md' --verbose
 fi
 
 if [[ "$COVERAGE" == "true" ]]; then

@@ -9,7 +9,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='xgp',
-    version='0.0.3',
+    version='0.1.1',
     description='XGP Python package with a scikit-learn interface',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',

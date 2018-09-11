@@ -22,28 +22,39 @@ Installation instructions are available [here](https://maxhalford.github.io/xgp/
 >>> from sklearn import model_selection
 >>> import xgp
 
->>> X, y = datasets.load_breast_cancer(return_X_y=True)
+>>> X, y = datasets.load_boston(return_X_y=True)
 >>> X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, random_state=42)
 
->>> model = xgp.XGPClassifier(
-...    loss_metric='logloss',
-...    funcs='sum,sub,mul,div',
-...    n_individuals=500,
-...    n_generations=100,
+>>> model = xgp.XGPRegressor(
+...    flavor='boosting',
+...    loss_metric='mse',
+...    funcs='add,sub,mul,div',
+...    n_individuals=50,
+...    n_generations=20,
+...    parsimony_coefficient=0.01,
+...    n_rounds=8,
 ...    random_state=42,
-...    parsimony_coefficient=0.01
 ... )
 
 >>> model = model.fit(X_train, y_train, eval_set=(X_test, y_test), verbose=True)
 
->>> metrics.log_loss(y_train, model.predict_proba(X_train))  # doctest: +ELLIPSIS
-0.217573...
+>>> metrics.mean_squared_error(y_train, model.predict(X_train))  # doctest: +ELLIPSIS
+17.794685...
 
->>> metrics.log_loss(y_test, model.predict_proba(X_test))  # doctest: +ELLIPSIS
-0.191963...
-
->>> print('Best program:', model.program_str_)  # doctest: +ELLIPSIS
-Best program: sum(mul(X[0], mul(-4.774751..., X[7])), 3.876205...)
+>>> metrics.mean_squared_error(y_test, model.predict(X_test))  # doctest: +ELLIPSIS
+17.337693...
 
 ```
 
+This will also produce the following output in the shell:
+
+```sh
+00:00:00 -- train mse: 42.06567 -- val mse: 33.80606 -- round 1
+00:00:00 -- train mse: 24.20662 -- val mse: 22.73832 -- round 2
+00:00:00 -- train mse: 22.06328 -- val mse: 18.90887 -- round 3
+00:00:00 -- train mse: 20.25549 -- val mse: 18.45531 -- round 4
+00:00:00 -- train mse: 18.86693 -- val mse: 18.22908 -- round 5
+00:00:00 -- train mse: 17.79469 -- val mse: 17.33769 -- round 6
+00:00:01 -- train mse: 17.62692 -- val mse: 22.67012 -- round 7
+00:00:01 -- train mse: 17.24799 -- val mse: 22.77802 -- round 8
+```

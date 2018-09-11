@@ -68,6 +68,14 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         Learning rate used for gradient boosting.
     line_search : bool
         Whether or not to use line search for gradient boosting.
+    row_sampling : float
+        Ratio of rows to sample for training.
+    col_sampling: float
+        Ratio of columns to sample for training.
+    use_best_rounds: bool
+        Whether to only use the best rounds during boosting or not.
+    monitor_every: int
+        Determines when to monitor the train and validation scores.
     random_state : int, RandomState instance or None, optional (default=None)
         Control the randomization of the algorithm
 
@@ -95,8 +103,8 @@ class XGPModel(abc.ABC, base.BaseEstimator):
                  n_individuals=100, n_generations=30, p_hoist_mutation=0.1, p_sub_tree_mutation=0.1,
                  p_point_mutation=0.1, point_mutation_rate=0.5, p_sub_tree_crossover=0.3,
                  n_rounds=50, n_early_stopping_rounds=5, learning_rate=0.08, line_search=True,
+                 row_sampling=1.0, col_sampling=1.0, use_best_rounds=True, monitor_every=1,
                  random_state=None):
-
 
         self.flavor = flavor
 
@@ -128,6 +136,10 @@ class XGPModel(abc.ABC, base.BaseEstimator):
         self.n_early_stopping_rounds = n_early_stopping_rounds
         self.learning_rate = learning_rate
         self.line_search = line_search
+        self.row_sampling = row_sampling
+        self.col_sampling = col_sampling
+        self.use_best_rounds = use_best_rounds
+        self.monitor_every = monitor_every
 
         # Other
         self.random_state = random_state
@@ -188,6 +200,10 @@ class XGPModel(abc.ABC, base.BaseEstimator):
             n_early_stopping_rounds=self.n_early_stopping_rounds,
             learning_rate=self.learning_rate,
             line_search=self.line_search,
+            row_sampling=self.row_sampling,
+            col_sampling=self.col_sampling,
+            use_best_rounds=self.use_best_rounds,
+            monitor_every=self.monitor_every,
 
             # Other
             seed=utils.check_random_state(self.random_state).randint(2 ** 24),

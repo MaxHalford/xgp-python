@@ -60,6 +60,10 @@ func Fit(
 	nEarlyStoppingRounds uint,
 	learningRate float64,
 	lineSearch bool,
+	rowSampling float64,
+	colSampling float64,
+	useBestRounds bool,
+	monitorEvery uint,
 
 	// Other
 	seed int64,
@@ -171,6 +175,11 @@ func Fit(
 			learningRate,
 			ls,
 			loss,
+			rowSampling,
+			colSampling,
+			useBestRounds,
+			monitorEvery,
+			rng,
 		)
 		if err != nil {
 			panic(err)

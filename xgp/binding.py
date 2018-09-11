@@ -107,6 +107,10 @@ def fit(X_train: np.ndarray,
         n_early_stopping_rounds: int,
         learning_rate: float,
         line_search: bool,
+        row_sampling: float,
+        col_sampling: float,
+        use_best_rounds: bool,
+        monitor_every: int,
 
         # Other
         seed: int,
@@ -115,7 +119,7 @@ def fit(X_train: np.ndarray,
 
     # Find the and load the XGP dynamic library file
     paths = find_xgp_dll_paths()
-    if len(paths) == 0:
+    if not paths:
         raise RuntimeError("Can't find any XGP dynamic library files")
     lib = load_dll(paths[0])
 
@@ -170,6 +174,10 @@ def fit(X_train: np.ndarray,
         (n_early_stopping_rounds, ctypes.c_ulonglong),
         (learning_rate, ctypes.c_double),
         (line_search, ctypes.c_bool),
+        (row_sampling, ctypes.c_double),
+        (col_sampling, ctypes.c_double),
+        (use_best_rounds, ctypes.c_bool),
+        (monitor_every, ctypes.c_ulonglong),
 
         # Other
         (seed, ctypes.c_longlong),
